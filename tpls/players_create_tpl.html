@@ -1,0 +1,10 @@
+{% extends 'base' %}
+{% block content %}
+<h2>Add Player</h2>
+<form method="post">
+    <input name="name" placeholder="Name" required><br>
+    <input name="email" placeholder="Email"><br>
+    <input name="handicap" value="0"><br>
+    <button type="submit">Add</button>
+</form>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base' %}
+{% block content %}
+<h2>Divisions</h2>
+<a href="{{ url_for('create_division') }}">Add Division</a>
+<ul>
+{% for d in retTable %}
+    <li>{{ d.name }}</li>
+{% endfor %}
+</ul>
+{% endblock %}
+
+
