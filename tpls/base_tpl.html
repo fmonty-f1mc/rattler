@@ -1,0 +1,24 @@
+<!doctype html>
+<title>Rattler Tournament</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+<header>
+  <h1>Rattler Tournament</h1>
+  <nav>
+    <a href="{{ url_for('index') }}">Home</a> |
+    <a href="{{ url_for('tournaments') }}">Tournaments</a> |
+    <a href="{{ url_for('divisions') }}">Divisions</a> |
+    <a href="{{ url_for('players') }}">Players</a> |
+  </nav>
+</header>
+<main>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+      {% for m in messages %}
+        <li>{{ m }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>

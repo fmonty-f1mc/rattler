@@ -1,0 +1,11 @@
+    {% extends 'base' %}
+    {% block content %}
+    <h2>Create Tournament</h2>
+    <form method="post">
+      <input name="course_name" placeholder="Course Name" required><br>
+      <input name="date" placeholder="YYYY-MM-DD" required><br>
+      <input name="course_rating" placeholder="Course Rating" optional><br>
+      <input name="yardage" placeholder="Yardage" optional><br>
+      <button type="submit">Create</button>
+    </form>
+    {% endblock %}
