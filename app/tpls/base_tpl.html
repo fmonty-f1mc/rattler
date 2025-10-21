@@ -4,10 +4,11 @@
 <header>
   <h1>Rattler Tournament</h1>
   <nav>
-    <a href="{{ url_for('index') }}">Home</a> |
-    <a href="{{ url_for('tournaments') }}">Tournaments</a> |
-    <a href="{{ url_for('divisions') }}">Divisions</a> |
-    <a href="{{ url_for('players') }}">Players</a> |
+    <a href="{{ url_for('main.index') }}">Home</a> |
+    <a href="{{ url_for('players.player_view') }}">Players</a> |
+    <a href="{{ url_for('tournaments.tournament_view') }}">Tournaments</a> |
+    <a href="{{ url_for('divisions.division_view') }}">Divisions</a> |
+    <!-- <a href="{{ url_for('main.index') }}">Home Again</a> | -->
   </nav>
 </header>
 <main>
