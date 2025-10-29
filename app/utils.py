@@ -7,7 +7,7 @@ import csv
 from math import ceil, floor
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import inspect
+from sqlalchemy import inspect,update,delete
 
     
 def get_html(file_location):

@@ -4,7 +4,9 @@
 <a href="{{ url_for('divisions.create_division') }}">Add Division</a>
 <ul>
 {% for d in retTable %}
-    <li>{{ d.name }}</li>
+    <li>{{ d.name }} 
+        <a href="{{ url_for('divisions.division_profile', did=d.id) }}">[View]</a>
+    </li> 
 {% endfor %}
 </ul>
 {% endblock %}

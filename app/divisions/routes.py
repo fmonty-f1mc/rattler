@@ -1,5 +1,5 @@
 from app.utils import *
-from app.models import Division
+from app.models import Division,Player
 from app import db, bcrypt
 
 divisions=Blueprint("divisions",__name__)
@@ -16,3 +16,8 @@ def create_division():
         db.session.commit()
         return redirect(url_for('divisions.division_view'))
     return render_template_string(tpls["divisions_create_tpl"])
+
+@divisions.route('/divisions/<int:did>', methods=['GET', 'POST'])
+def division_profile(did):
+    division_profile = Division.query.get_or_404(did)
+    return render_template_string(tpls['division_profile_tpl'], division_profile=division_profile)

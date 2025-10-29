@@ -1,0 +1,10 @@
+{% extends 'base' %}
+{% block content %}
+<h2>Leaderboard — {{ t.name }}</h2>
+<ol>
+{% for e in ordered %}
+    <li>{{ e.player.name }} — Gross: {{ e.gross_score }} | Net: {{ e.net_score }}</li>
+{% endfor %}
+</ol>
+<p><a href="{{ url_for('tournaments.view_tournament', tid=t.id) }}">Back to Tournament</a></p>
+{% endblock %}

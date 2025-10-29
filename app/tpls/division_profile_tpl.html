@@ -1,0 +1,11 @@
+{% extends 'base' %}
+    {% block content %}
+    <h2>{{ division_profile.name }}</h2>
+    <ul>
+    {% for e in division_profile.players %}
+      <li>{{ e.name }} — 
+        <a href="{{ url_for('players.player_profile', pid=e.id) }}">[View Profile]</a>
+      </li>
+    {% endfor %}
+    </ul>
+{% endblock %}
