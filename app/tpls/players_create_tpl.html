@@ -5,6 +5,11 @@
     <input name="name" placeholder="Name" required><br>
     <input name="email" placeholder="Email"><br>
     <input name="handicap" value="0"><br>
+    <select name="division">
+      {% for d in all_divisions %}
+        <option value="{{ d.id }}">{{ d.name }}</option>
+      {% endfor %}
+      </select>
     <button type="submit">Add</button>
 </form>
 {% endblock %}

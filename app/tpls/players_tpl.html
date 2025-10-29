@@ -4,7 +4,10 @@
 <a href="{{ url_for('players.create_player') }}">Add Player</a>
 <ul>
 {% for p in retTable %}
-    <li>{{ p.name }} (hcp {{ p.handicap }})</li>
+    <li>{{ p.name }} (hcp {{ p.handicap }}) 
+    [<a href="{{ url_for('players.player_profile', pid=p.id) }}">View</a>]
+    [<a href="{{ url_for('players.edit_player', pid=p.id) }}">Edit</a>]
+    </li>
 {% endfor %}
 </ul>
 {% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base' %}
+{% block content %}
+<h2>{{ p.name }}</h2>
+<ul>
+<br>
+<strong> Player Division: {{ p.player_division.name }}</strong>
+<br>
+<strong> Email: {{ p.email }}</strong>
+<br>
+<a href="{{ url_for('players.edit_player', pid=p.id) }}" class="btn btn-primary"> Edit </a>
+<a href="{{ url_for('players.delete_player', pid=p.id) }}" class="btn btn-primary"> Delete </a>
+</ul>
+{% endblock %}

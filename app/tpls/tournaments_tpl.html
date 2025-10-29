@@ -4,7 +4,7 @@
       <a href="{{ url_for('tournaments.create_tournament') }}">+ Create new tournament</a>
       <ul>
       {% for t in retTable %}
-        <li><strong>{{ t.name }}</strong> — {{ t.date }} [<a href="{{ url_for('tournaments.tournament_view', tid=t.id) }}">view</a>]</li>
+        <li><strong>{{ t.name }}</strong> — {{ t.date }} [<a href="{{ url_for('tournaments.view_tournament', tid=t.id) }}">view</a>]</li>
       {% endfor %}
       </ul>
     {% endblock %}

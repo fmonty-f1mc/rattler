@@ -1,0 +1,15 @@
+{% extends 'base' %}
+{% block content %}
+<h2>Edit Player</h2>
+<form method="post">
+    <input name="name" value={{ p.name }}><br>
+    <input name="email" value={{ p.email }}><br>
+    <input name="handicap" value={{ p.handicap }}><br>
+    <select name="division">
+      {% for d in all_divisions %}
+        <option value="{{ d.id }}">{{ d.name }}</option>
+      {% endfor %}
+      </select><br>
+    <button type="submit">Submit Changes</button>
+</form>
+{% endblock %}
