@@ -1,22 +1,48 @@
 {% extends 'base' %}
     {% block content %}
-    <h2>{{ t.name }}</h2>
-    <!-- <p>Holes: {{ t.holes }}</p> -->
-    <form method="post">
+    <h2>{{ t.date.year }} Rattler Tournament at {{ t.course_name }} </h2>
+    <form id="playerSelect" action="" method="post">
       <select name="player_id">
       {% for p in all_players %}
         <option value="{{ p.id }}">{{ p.name }} (hcp {{ p.handicap }})</option>
       {% endfor %}
       </select>
-      <button type="submit">Add Player</button>
+      <input name="tournament_handicap" placeholder="Tournament Handicap">
+      <div class="panel-body">
+          <input type ="submit" name="action" value="Add Player with Player Handicap" >
+          <input type ="submit" name="action" value="Add Player with Tournament Handicap" >
+          <input type ="submit" name="action" value="Remove Player" onclick="return confirm('Are you sure you want to delete this item?');">
+        </div>
     </form>
-    <ul>
-    {% for e in entries %}
-      <li>{{ e.player.name }} — 
-        <a href="{{ url_for('tournaments.score_entry', tid=t.id, eid=e.id) }}">[Enter Prelim Score]</a>
-        <a href="{{ url_for('tournaments.prelim_player_remove', tid=t.id, eid=e.id) }}">[Remove Player]</a>
-      </li>
+    <br>
+    <h3>Preliminary Round Leaderboard</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Net Score</th>
+          <th>Gross Score</th>
+        </tr>
+      </thead>
+        <tbody>
+    {% for e in ordered %}
+    <tr>
+      <td><strong>{{ e.player.name }}</strong></td>
+      <td>{{ e.net_score }}</td>
+      <td><div class="panel-body"> </div><a href="{{ url_for('tournaments.score_entry', tid=t.id, eid=e.id) }}">{{ e.gross_score }} </a></div></td>
+    </tr>
     {% endfor %}
-    </ul>
-    <p><a href="{{ url_for('tournaments.leaderboard', tid=t.id) }}">View Leaderboard</a></p>
+  </tbody>
+</table>
+    <br>
+
+    <h3>Potential Rattler Pairings</h3>
+    <ol>
+    {% for p1,p2 in rattlerPairings %}
+    <li>
+      <strong>{{ p1.player.name }}</strong> -- {{ p2.player.name }}
+    </li>
+    {% endfor %}
+    </ol>
+
 {% endblock %}

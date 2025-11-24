@@ -1,0 +1,13 @@
+{% extends 'base' %}
+{% block content %}
+<h2>Edit Tournament</h2>
+<ul>
+<form method="post">
+    <input type="date" name="date" value={{ t.date }}><br>
+    <input type = "text" name="course_name" value="{{ t.course_name if t.course_name else '' }}" placeholder="{{ 'Course Name' if not t.course_name else '' }}"><br>
+    <input type = "integer" name="yardage" value="{{ t.yardage if t.yardage else '' }}" placeholder="{{ 'Yardage' if not t.yardage else '' }}"><br>
+    <input type = "integer" name="course_rating" value="{{ t.course_rating if t.course_rating else '' }}" placeholder="{{ 'Course Rating' if not t.course_rating else '' }}"><br>
+    <button type="submit">Submit Changes</button>
+</form>
+</ul>
+{% endblock %}

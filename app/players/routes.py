@@ -51,5 +51,5 @@ def delete_player(pid):
         db.session.delete(p)
         db.session.commit()
         flash('Player Removed from Db')
-        return redirect(url_for('player_view'))
+        return redirect(url_for('players.player_view'))
     return render_template_string(tpls['player_delete_tpl'], p=p)

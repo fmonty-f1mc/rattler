@@ -47,10 +47,11 @@ class PrelimPlayer(db.Model):
     gross_score = db.Column(db.Integer, default=0)
     net_score = db.Column(db.Integer, default=0)
     player = db.relationship('Player', back_populates='entries')
+    tournament_handicap=db.Column(db.Integer,default=0)       
     
     def update_scores(self,score):
         self.gross_score = score
-        strokes_allocated=floor(self.player.handicap)
+        strokes_allocated=floor(self.tournament_handicap)
         self.net_score = self.gross_score - strokes_allocated
         
     

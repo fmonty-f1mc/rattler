@@ -27,4 +27,3 @@ def emptyTablePageHandler(dbTable,redirectFunc,viewTpl):
     else:
         return render_template_string(tpls[viewTpl], retTable=globals()[dbTable].query.all())
     
-    
