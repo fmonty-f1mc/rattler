@@ -3,12 +3,29 @@
 <h2>Players</h2>
 <a href="{{ url_for('players.create_player') }}">Add Player</a>
 <ul>
-{% for p in retTable %}
-    <li>{{ p.name }} (hcp {{ p.handicap }}) 
-    [<a href="{{ url_for('players.player_profile', pid=p.id) }}">View</a>]
-    [<a href="{{ url_for('players.edit_player', pid=p.id) }}">Edit</a>]
-    </li>
-{% endfor %}
+
+<table>
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Player Handicap</th>
+    <th>Division</th>
+    <th></th>
+    <th></th>
+  </tr>
+</thead>
+  <tbody>
+    {% for p in retTable %}
+    <tr>
+      <td>{{ p.name }}</td>
+      <td>{{ p.handicap }}</td>
+      <td>{{ p.player_division.name }}</td>
+      <td><a href="{{ url_for('players.player_profile', pid=p.id) }}">View</a></td>
+      <td><a href="{{ url_for('players.edit_player', pid=p.id) }}">Edit</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 </ul>
 {% endblock %}
 

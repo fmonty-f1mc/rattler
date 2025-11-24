@@ -1,15 +1,27 @@
 {% extends 'base' %}
 {% block content %}
 <h2>Edit Player</h2>
+<ul>
 <form method="post">
-    <input name="name" value={{ p.name }}><br>
+    <input type = "text" name="name" value="{{ p.name if p.name else '' }}" placeholder="{{ 'Player Name' if not p.name else '' }}"><br>
     <input name="email" value={{ p.email }}><br>
     <input name="handicap" value={{ p.handicap }}><br>
     <select name="division">
       {% for d in all_divisions %}
-        <option value="{{ d.id }}">{{ d.name }}</option>
+        <option value="{{ d.id }}"> {{ d.name }} </option>
       {% endfor %}
       </select><br>
-    <button type="submit">Submit Changes</button>
+</ul>
+    <button type="submit">Save</button>
+</form>
+<form method="POST" action="{{ url_for('players.delete_player', pid=p.id) }}" onsubmit="return confirm('Are you sure you want to continue? This action cannot be undone.');">
+  <button type="submit" >Delete Player</button>
 </form>
 {% endblock %}
+
+
+
+
+
+
+

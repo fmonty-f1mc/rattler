@@ -3,8 +3,28 @@
       <h2>Tournaments</h2>
       <a href="{{ url_for('tournaments.create_tournament') }}">+ Create new tournament</a>
       <ul>
-      {% for t in retTable %}
-        <li><strong>{{ t.name }}</strong> — {{ t.date }} [<a href="{{ url_for('tournaments.view_tournament', tid=t.id) }}">view</a>]</li>
-      {% endfor %}
-      </ul>
-    {% endblock %}
+<table>
+<thead>
+  <tr>
+    <th>Date</th>
+    <th>Course</th>
+    <th>Rating</th>
+    <th>Yardage</th>
+    <th></th>
+  </tr>
+</thead>
+  <tbody>
+    {% for t in retTable %}
+    <tr>
+      <td>{{ t.date }}</td>
+      <td>{{ t.course_name }}</td>
+      <td>{{ t.course_rating }}</td>
+      <td>{{ t.yardage }}</td>
+      <td><a href="{{ url_for('tournaments.view_tournament', tid=t.id) }}">view</a></td>
+      <td><a href="{{ url_for('tournaments.edit_tournament', tid=t.id) }}">edit</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</ul>
+{% endblock %}
