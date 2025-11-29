@@ -19,7 +19,8 @@
     <table>
       <thead>
         <tr>
-          <th>Player</th>
+          <th>Player (HCP)</th>
+          <th>Tournament Handicap</th>
           <th>Net Score</th>
           <th>Gross Score</th>
         </tr>
@@ -27,7 +28,8 @@
         <tbody>
     {% for e in ordered %}
     <tr>
-      <td><strong>{{ e.player.name }}</strong></td>
+      <td><strong>{{ e.player.name }} </strong> ({{ e.player.handicap }})</td>
+      <td>{{ e.tournament_handicap }}</td>
       <td>{{ e.net_score }}</td>
       <td><div class="panel-body"> </div><a href="{{ url_for('tournaments.score_entry', tid=t.id, eid=e.id) }}">{{ e.gross_score }} </a></div></td>
     </tr>
