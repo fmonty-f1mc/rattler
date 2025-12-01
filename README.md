@@ -1,7 +1,5 @@
 # Rattler Tournament
 
-To run: 
+To Run:
 
-Old Way: """FLASK_APP=main.py flask run --host=0.0.0.0 --port=5000"""
-
-New Way: flask --app main.py --debug run
+``` $uv run flask --app run_app.py --debug run ```

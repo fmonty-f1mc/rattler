@@ -10,15 +10,18 @@ main = Blueprint("main", __name__)
 #routing to index / home
 @main.route("/")
 def index():
-    t=Tournament.query.order_by(Tournament.date.desc()).first()
-    tid=t.id
-    entries = PrelimPlayer.query.filter_by(tournament_id=tid).all()
-    ordered = sorted(entries, key=lambda e: (e.net_score, e.gross_score))
-    
-    topField=sorted(entries, key=lambda e: (e.net_score, e.gross_score))
-    topField=topField[:len(topField) // 2 ]
-    bottomField=sorted(entries, key=lambda e: (e.net_score, e.gross_score),reverse=True)
-    bottomField=bottomField[:len(bottomField) // 2 ]
-    rattlerPairings=zip(topField,bottomField)
-    
-    return render_template_string(tpls["index_tpl"],t=t,entries=entries,ordered=ordered,rattlerPairings=rattlerPairings)
+    if Tournament.query.first() is None:
+        return render_template_string(tpls["index_init_tpl"])
+    else:
+        t=Tournament.query.order_by(Tournament.date.desc()).first()
+        tid=t.id
+        entries = PrelimPlayer.query.filter_by(tournament_id=tid).all()
+        ordered = sorted(entries, key=lambda e: (e.net_score, e.gross_score))
+        
+        topField=sorted(entries, key=lambda e: (e.net_score, e.gross_score))
+        topField=topField[:len(topField) // 2 ]
+        bottomField=sorted(entries, key=lambda e: (e.net_score, e.gross_score),reverse=True)
+        bottomField=bottomField[:len(bottomField) // 2 ]
+        rattlerPairings=zip(topField,bottomField)
+        
+        return render_template_string(tpls["index_tpl"],t=t,entries=entries,ordered=ordered,rattlerPairings=rattlerPairings)
