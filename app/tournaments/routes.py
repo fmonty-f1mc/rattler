@@ -1,6 +1,10 @@
 from app.utils import *
 from app.models import *
 from app import db, bcrypt
+import random
+from sqlalchemy.sql.expression import func
+from itertools import zip_longest
+
 
 tournaments=Blueprint("tournaments",__name__)
 
@@ -138,3 +142,26 @@ def prelim_player_add(tid, pid):
             db.session.commit()
             flash('Player added')
         return redirect(url_for('tournaments.view_tournament', tid=tid))
+    
+@tournaments.route('/tournaments/<int:tid>/groupings', methods=['GET','POST'])
+def group_tournament(tid):
+    #tournament to generate
+    t = Tournament.query.get_or_404(tid)
+    
+    #players entered into tournament
+    players=PrelimPlayer.query.filter_by(tournament_id=tid)
+    
+    #maximum group size
+    max_group_size=4
+    
+    # Create 'group_size' copies of the iterator
+    iterators_for_zip = [players] * max_group_size
+    
+    groups=[]
+    for n,group in enumerate(zip_longest(*iterators_for_zip, fillvalue=None)):
+        # Filter out None values if the last group is incomplete
+        clean_group = [item for item in group if item is not None]
+        groups.append(clean_group)
+        
+    return render_template_string(tpls['grouping_tpl'],t=t,groups=groups)
+        
