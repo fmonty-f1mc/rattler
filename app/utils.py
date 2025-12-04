@@ -5,6 +5,11 @@ from jinja2 import DictLoader
 import io
 import csv
 from math import ceil, floor
+from flask_wtf import FlaskForm
+from wtforms import SelectMultipleField, SubmitField
+from wtforms.validators import DataRequired
+from wtforms_alchemy import QuerySelectMultipleField
+from wtforms import widgets
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect,update,delete
@@ -27,3 +32,9 @@ def emptyTablePageHandler(dbTable,redirectFunc,viewTpl):
     else:
         return render_template_string(tpls[viewTpl], retTable=globals()[dbTable].query.all())
     
+class checkboxSelect(QuerySelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
+class MyMultiSelectForm(FlaskForm):
+        choices = checkboxSelect("choices")

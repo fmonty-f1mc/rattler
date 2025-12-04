@@ -1,0 +1,19 @@
+{% extends 'base' %}
+    {% block content %}
+    <h2>{{ t.date.year }} Rattler Tournament at {{ t.course_name }} </h2>
+  <nav>
+        <a href="{{ url_for('tournaments.view_tournament',tid=t.id) }}">Leaderboard</a> |
+        <a href="{{ url_for('tournaments.add_players',tid=t.id) }}">Add Players</a> | 
+        <a href="{{ url_for('tournaments.mass_score_entry',tid=t.id) }}">Score Entry</a> | 
+        <a href="{{ url_for('tournaments.rattler_pairings',tid=t.id) }}">Rattler Pairings</a> | 
+        <a href="{{ url_for('tournaments.group_tournament',tid=t.id) }}">Groupings</a> | 
+  </nav>
+    <h3>Potential Rattler Pairings</h3>
+    <ol>
+    {% for p1,p2 in rattlerPairings %}
+    <li>
+      <strong>{{ p1.player.name }}</strong> -- {{ p2.player.name }}
+    </li>
+    {% endfor %}
+    </ol>
+{% endblock %}

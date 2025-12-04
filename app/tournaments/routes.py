@@ -1,6 +1,10 @@
 from app.utils import *
 from app.models import *
 from app import db, bcrypt
+import random
+from sqlalchemy.sql.expression import func
+from itertools import zip_longest
+
 
 tournaments=Blueprint("tournaments",__name__)
 
@@ -25,7 +29,30 @@ def create_tournament():
 @tournaments.route('/tournaments/<int:tid>', methods=['GET', 'POST'])
 def view_tournament(tid):
     t = Tournament.query.get_or_404(tid)
-    all_players = Player.query.all()
+    entries = PrelimPlayer.query.filter_by(tournament_id=tid).all()
+    ordered = sorted(entries, key=lambda e: (e.net_score, e.gross_score))
+    return render_template_string(tpls['prelimPlayer_tpl'], t=t, entries=entries,ordered=ordered)
+
+    
+@tournaments.route('/tournaments/<int:tid>/add_players', methods=['GET', 'POST'])
+def add_players(tid):
+    t = Tournament.query.get_or_404(tid)
+    entries = PrelimPlayer.query.with_entities(PrelimPlayer.player_id).filter(PrelimPlayer.tournament_id == tid)
+    all_players = Player.query.filter(Player.id.not_in(entries)).all()
+    
+    form = MyMultiSelectForm(data={"choices": entries})
+    form.choices.query = all_players
+    
+    if request.method == 'POST':
+        for e in form.choices.data:
+            db.session.add(PrelimPlayer(tournament_id=tid,player_id=e.id))
+        db.session.commit()
+        return redirect(url_for('tournaments.view_tournament', tid=tid))
+    return render_template_string(tpls['prelimPlayer_add_tpl'], t=t,form=form)
+    
+@tournaments.route('/tournaments/<int:tid>/rattler_pairings', methods=['GET', 'POST'])
+def rattler_pairings(tid):
+    t = Tournament.query.get_or_404(tid)
     entries = PrelimPlayer.query.filter_by(tournament_id=tid).all()
     ordered = sorted(entries, key=lambda e: (e.net_score, e.gross_score))
     
@@ -34,54 +61,7 @@ def view_tournament(tid):
     bottomField=sorted(entries, key=lambda e: (e.net_score, e.gross_score),reverse=True)
     bottomField=bottomField[:len(bottomField) // 2 ]
     rattlerPairings=zip(topField,bottomField)
-    
-    if request.method == 'POST':
-        pid = int(request.form.get('player_id'))
-        pName= Player.query.get_or_404(pid).name
-        if request.form.get('action') in ('Add Player with Player Handicap','Add Player with Tournament Handicap'):
-            
-            if PrelimPlayer.query.filter_by(tournament_id=tid, player_id=pid).first():
-                flash(f'{pName} already added')
-                
-            elif request.form.get('action') == 'Add Player with Player Handicap':
-                p=PrelimPlayer(tournament_id=tid, player_id=pid)
-                db.session.add(p)
-                p.tournament_handicap=Player.query.get_or_404(pid).handicap
-                db.session.commit()
-                flash(f'{pName} added with Player Handicap')
-                return redirect(url_for('tournaments.view_tournament', tid=tid))
-            
-            elif request.form.get('action') == 'Add Player with Tournament Handicap':
-                p=PrelimPlayer(tournament_id=tid, player_id=pid)
-                db.session.add(p)
-                p.tournament_handicap=request.form.get('tournament_handicap')
-                db.session.commit()
-                flash(f'{pName} added with Tournament Handicap')
-                return redirect(url_for('tournaments.view_tournament', tid=tid))
-        if request.form.get('action') == 'Remove Player':
-            if PrelimPlayer.query.filter_by(tournament_id=tid, player_id=pid).first() is not None:
-                e = PrelimPlayer.query.filter_by(tournament_id=tid, player_id=pid).first()
-                db.session.delete(e)
-                db.session.commit()
-                flash(f'{pName} Removed from tournament')
-                return redirect(url_for('tournaments.view_tournament', tid=tid))
-            else:
-                flash('Player is not Added to Tournament')
-                return redirect(url_for('tournaments.view_tournament', tid=tid))
-        else:
-            flash("Error on the program")
-            
-    #if request.method == 'POST':
-    #    pid = int(request.form.get('player_id'))
-    #    if PrelimPlayer.query.filter_by(tournament_id=tid, player_id=pid).first():
-    #        flash('Player already added')
-    #    else:
-    #        db.session.add(PrelimPlayer(tournament_id=tid, player_id=pid))
-    #        db.session.commit()
-    #        flash('Player added')
-    #    return redirect(url_for('tournaments.view_tournament', tid=tid))
-    
-    return render_template_string(tpls['prelimPlayer_tpl'], t=t, all_players=all_players, entries=entries,ordered=ordered,rattlerPairings=rattlerPairings)
+    return render_template_string(tpls['prelimPlayer_rattler_pairings_tpl'], t=t,rattlerPairings=rattlerPairings) 
 
 @tournaments.route('/tournaments/<int:tid>/edit', methods=['GET', 'POST'])
 def edit_tournament(tid):
@@ -117,6 +97,20 @@ def score_entry(tid, eid):
         return redirect(url_for('tournaments.view_tournament', tid=tid))
     return render_template_string(tpls['score_entry_tpl'], e=e, gross_score=gross_score)
 
+@tournaments.route('/tournaments/<int:tid>/score_entry', methods=['GET','POST'])
+def mass_score_entry(tid):
+    t=Tournament.query.get_or_404(tid)
+    players=PrelimPlayer.query.filter(PrelimPlayer.tournament_id == tid).all()
+    if request.method == 'POST':
+        for i in players:
+            pid=i.id
+            score = int(request.form.get(f"score_{pid}"))
+            i.update_scores(score)
+        db.session.commit()
+        flash('Scores saved')
+        return redirect(url_for('tournaments.view_tournament', tid=tid,t=t))
+    return render_template_string(tpls['mass_score_entry_tpl'],players=players,t=t)
+
 @tournaments.route('/tournaments/<int:tid>/remove/<int:eid>', methods=['GET','POST'])
 def prelim_player_remove(tid, eid):
     e = PrelimPlayer.query.get_or_404(eid)
@@ -138,3 +132,15 @@ def prelim_player_add(tid, pid):
             db.session.commit()
             flash('Player added')
         return redirect(url_for('tournaments.view_tournament', tid=tid))
+    
+@tournaments.route('/tournaments/<int:tid>/groupings', methods=['GET','POST'])
+def group_tournament(tid):
+    
+    #tournament
+    t = Tournament.query.get_or_404(tid)
+    entries = PrelimPlayer.query.filter_by(tournament_id = tid).all()
+    
+    
+    
+    return render_template_string(tpls['grouping_tpl'],t=t,entries=entries)
+        

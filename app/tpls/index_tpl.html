@@ -3,6 +3,8 @@
   <h2>Welcome To the Rattler Score Keeper</h2>
   <p>To Edit Tournament and players please use the links</p>
   <h2> <h2>{{ t.date.year }} Rattler Tournament at {{ t.course_name }} </h2> </h2>
+  <div class="pane-container">
+    <div class="pane" id="left-pane">
   <h3>Preliminary Round Leaderboard -- {{ t.course_name }} </h3>
     <table>
       <thead>
@@ -24,7 +26,8 @@
     {% endfor %}
   </tbody>
 </table>
-
+</div>
+<div class="pane" id="right-pane">
     <h3>Potential Rattler Pairings</h3>
     <ol>
     {% for p1,p2 in rattlerPairings %}
@@ -33,4 +36,6 @@
     </li>
     {% endfor %}
     </ol>
+  </div>
+</div>
 {% endblock %}

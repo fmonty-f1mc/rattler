@@ -1,0 +1,18 @@
+{% extends 'base' %}
+{% block content %}
+<h2>{{ t.date.year }} Rattler Tournament at {{ t.course_name }} </h2>
+  <nav>
+        <a href="{{ url_for('tournaments.view_tournament',tid=t.id) }}">Leaderboard</a> |
+        <a href="{{ url_for('tournaments.add_players',tid=t.id) }}">Add Players</a> | 
+        <a href="{{ url_for('tournaments.mass_score_entry',tid=t.id) }}">Score Entry</a> | 
+        <a href="{{ url_for('tournaments.rattler_pairings',tid=t.id) }}">Rattler Pairings</a> | 
+        <a href="{{ url_for('tournaments.group_tournament',tid=t.id) }}">Groupings</a> | 
+  </nav>
+<h2>Tournament Score Entry</h2>
+<form method="post">
+    {% for p in players %}
+    {{ p.player.name }}: <input type = "number" name="score_{{ p.id }}" value="{{ p.gross_score if p.gross_score else 0 }}" placeholder="{{ 'Gross Score' if not p.gross_score else '' }}"><br>
+    {% endfor %}
+    <button type="submit">Add</button>
+</form>
+{% endblock %}
