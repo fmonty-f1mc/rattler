@@ -1,6 +1,6 @@
 {% extends 'base' %}
-{% block content %}
-  <h2>{{ t.date.year }} Rattler Tournament at {{ t.course_name }} </h2>
+    {% block content %}
+    <h2>{{ t.date.year }} Rattler Tournament at {{ t.course_name }} </h2>
   <nav>
         <a href="{{ url_for('tournaments.view_tournament',tid=t.id) }}">Leaderboard</a> |
         <a href="{{ url_for('tournaments.add_players',tid=t.id) }}">Add Players</a> | 
@@ -8,7 +8,10 @@
         <a href="{{ url_for('tournaments.rattler_pairings',tid=t.id) }}">Rattler Pairings</a> | 
         <a href="{{ url_for('tournaments.group_tournament',tid=t.id) }}">Groupings</a> | 
   </nav>
-    <h2>{{ t.date.year }} Rattler Tournament at {{ t.course_name }} </h2><br>
-    There are {{ entries|length }} total players this year
+    <form method="POST" action="">
+        {{ form.crsf_token }}
+        {{ form.choices }}
+        <button type="submit">Submit</button>
+    </form>
 
-    {% endblock %}
+{% endblock %}

@@ -41,6 +41,17 @@ class Player(db.Model):
     division_id=db.Column(db.ForeignKey('division.id'))
     player_division=db.relationship('Division',back_populates='players')
     
+    def __str__(self):
+        return self.name
+    
+class Grouping(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+    #name = db.Column(db.String(120),nullable=False)
+    players = db.relationship('PrelimPlayer',back_populates='player_grouping')
+    
+    def __str__(self):
+        return f"Group {self.id}"
+    
 class Division(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(120),nullable=False)
@@ -53,7 +64,9 @@ class PrelimPlayer(db.Model):
     gross_score = db.Column(db.Integer, default=0)
     net_score = db.Column(db.Integer, default=0)
     player = db.relationship('Player', back_populates='entries')
-    tournament_handicap=db.Column(db.Integer,default=0)       
+    tournament_handicap=db.Column(db.Integer,default=0)
+    grouping_id = db.Column(db.Integer, db.ForeignKey('grouping.id'))      
+    player_grouping=db.relationship('Grouping', back_populates='players')
     
     def update_scores(self,score):
         self.gross_score = score
